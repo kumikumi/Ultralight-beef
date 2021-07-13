@@ -1,0 +1,14 @@
+FileVersion = 1
+
+[Project]
+Name = "Ultralight"
+TargetType = "BeefLib"
+StartupObject = "Program"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/dist/sdk/lib/Ultralight.lib", "$(ProjectDir)/dist/sdk/lib/UltralightCore.lib", "$(ProjectDir)/dist/sdk/lib/WebCore.lib", "$(ProjectDir)/dist/sdk/lib/AppCore.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.dll\")"]
+
+[Configs.Release.Win64]
+LibPaths = ["$(ProjectDir)/dist/sdk/lib/Ultralight.lib", "$(ProjectDir)/dist/sdk/lib/UltralightCore.lib", "$(ProjectDir)/dist/sdk/lib/WebCore.lib", "$(ProjectDir)/dist/sdk/lib/AppCore.lib"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.dll\")", "CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/resources/*\")"]
