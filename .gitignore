@@ -3,3 +3,4 @@ BeefSpace_User.toml
 *.lib
 /build
 /recovery
+/dist/sdk
