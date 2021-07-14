@@ -11,4 +11,12 @@ PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.dll\")"]
 
 [Configs.Release.Win64]
 LibPaths = ["$(ProjectDir)/dist/sdk/lib/Ultralight.lib", "$(ProjectDir)/dist/sdk/lib/UltralightCore.lib", "$(ProjectDir)/dist/sdk/lib/WebCore.lib", "$(ProjectDir)/dist/sdk/lib/AppCore.lib"]
-PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.dll\")", "CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/resources/*\")"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.dll\")"]
+
+[Configs.Debug.Linux64]
+LibPaths = ["$(ProjectDir)/dist/sdk/bin/libUltralight.so", "$(ProjectDir)/dist/sdk/bin/libUltralightCore.so", "$(ProjectDir)/dist/sdk/bin/libWebCore.so", "$(ProjectDir)/dist/sdk/bin/libAppCore.so"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.so\")"]
+
+[Configs.Release.Linux64]
+LibPaths = ["$(ProjectDir)/dist/sdk/bin/libUltralight.so", "$(ProjectDir)/dist/sdk/bin/libUltralightCore.so", "$(ProjectDir)/dist/sdk/bin/libWebCore.so", "$(ProjectDir)/dist/sdk/bin/libAppCore.so"]
+PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/sdk/bin/*.so\")"]
