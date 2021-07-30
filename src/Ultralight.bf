@@ -1,4 +1,5 @@
 using System;
+using ultralight.JavaScriptCore;
 
 namespace ultralight
 {
@@ -39,8 +40,6 @@ namespace ultralight
 		public struct C_Surface;
 		public typealias ULSurface = C_Surface*;
 		public typealias ULBitmapSurface = C_Surface*;
-
-		public struct JSContextRef;
 
 		public enum ULMessageSource : int32
 		{
