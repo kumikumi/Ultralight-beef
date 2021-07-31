@@ -1,9 +1,9 @@
 using System;
-using ultralight.JavaScriptCore;
+using Ultralight.JavaScriptCore;
 
-namespace ultralight
+namespace Ultralight.Ultralight
 {
-	public static class Ultralight
+	static
 	{
 		public typealias ULChar16 = uint16;
 

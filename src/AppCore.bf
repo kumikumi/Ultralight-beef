@@ -1,9 +1,9 @@
 using System;
-using static ultralight.Ultralight;
+using Ultralight.Ultralight;
 
-namespace ultralight
+namespace Ultralight.AppCore
 {
-	public static class AppCore
+	static
 	{
 		[CLink]
 		public static extern void ulEnablePlatformFontLoader();

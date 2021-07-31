@@ -1,8 +1,6 @@
 using System;
 
-using ultralight.JavaScriptCore;
-
-namespace ultralight.JavaScriptCore
+namespace Ultralight.JavaScriptCore
 {
 	static
 	{
