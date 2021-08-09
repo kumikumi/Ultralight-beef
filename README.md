@@ -5,6 +5,6 @@ To use the library: clone this repo, then download the Ultralight SDK and extrac
 
 For a working sample project, see [Ultralight-beef-samples](https://github.com/kumikumi/Ultralight-beef-samples). Contains samples for rendering a webpage to a PNG file and for incorporating an interactive HTML UI as part of an OpenGL game/application.
 
-Note: Currently the main focus of the bindings is Glfw/OpenGL integration, and therefore AppCore API is mostly not implemented, except for a few necessary functions. Pull requests are welcome.
+The bindings are (mostly) auto generated from the Ultralight C API header files.
 
-Note #2: This library is currently tested and known to work on Windows and Linux. macOS support for the bindings is currently not implemented/tested. Pull requests are welcome.
+Note: This library is currently tested and known to work on Windows and Linux. macOS support for the bindings is currently not implemented/tested. Pull requests are welcome.
