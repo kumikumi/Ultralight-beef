@@ -29,6 +29,8 @@ namespace Ultralight
 			
 			GK_HANGUL = 0x15,
 			
+			GK_IME_ON = 0x16,
+			
 			GK_JUNJA = 0x17,
 			
 			GK_FINAL = 0x18,
@@ -36,6 +38,8 @@ namespace Ultralight
 			GK_HANJA = 0x19,
 			
 			GK_KANJI = 0x19,
+			
+			GK_IME_OFF = 0x1A,
 			
 			GK_ESCAPE = 0x1B,
 			
@@ -320,6 +324,8 @@ namespace Ultralight
 			GK_PROCESSKEY = 0xE5,
 			
 			GK_PACKET = 0xE7,
+			
+			GK_OEM_ATTN = 0xF0,
 			
 			GK_ATTN = 0xF6,
 			

@@ -14,6 +14,9 @@ namespace Ultralight.CAPI
 		public struct C_Session;
 		public typealias ULSession = C_Session*;
 		
+		public struct C_ViewConfig;
+		public typealias ULViewConfig = C_ViewConfig*;
+		
 		public struct C_View;
 		public typealias ULView = C_View*;
 		
@@ -38,38 +41,6 @@ namespace Ultralight.CAPI
 		public struct C_Surface;
 		public typealias ULSurface = C_Surface*;
 		public typealias ULBitmapSurface = C_Surface*;
-		
-		[CRepr]
-		public struct ULRect
-		{
-			public float left;
-			public float top;
-			public float right;
-			public float bottom;
-		};
-		
-		[CRepr]
-		public struct ULIntRect
-		{
-			public int32 left;
-			public int32 top;
-			public int32 right;
-			public int32 bottom;
-		};
-		
-		[CRepr]
-		public struct ULRenderTarget
-		{
-			public bool is_empty;
-			public uint32 width;
-			public uint32 height;
-			public uint32 texture_id;
-			public uint32 texture_width;
-			public uint32 texture_height;
-			public ULBitmapFormat texture_format;
-			public ULRect uv_coords;
-			public uint32 render_buffer_id;
-		};
 		
 		/******************************************************************************
 		* API Note:
@@ -123,38 +94,11 @@ namespace Ultralight.CAPI
 		public static extern void ulDestroyConfig(ULConfig config);
 		
 		///
-		/// Set the file path to the directory that contains Ultralight's bundled
-		/// resources (eg, cacert.pem and other localized resources).
-		///
-		[CLink]
-		public static extern void ulConfigSetResourcePath(ULConfig config, ULString resource_path);
-		
-		///
 		/// Set the file path to a writable directory that will be used to store
 		/// cookies, cached resources, and other persistent data.
 		///
 		[CLink]
 		public static extern void ulConfigSetCachePath(ULConfig config, ULString cache_path);
-		
-		///
-		/// When enabled, each View will be rendered to an offscreen GPU texture
-		/// using the GPU driver set in ulPlatformSetGPUDriver. You can fetch
-		/// details for the texture via ulViewGetRenderTarget.
-		///
-		/// When disabled (the default), each View will be rendered to an offscreen
-		/// pixel buffer. This pixel buffer can optionally be provided by the user--
-		/// for more info see ulViewGetSurface.
-		///
-		[CLink]
-		public static extern void ulConfigSetUseGPURenderer(ULConfig config, bool use_gpu);
-		
-		///
-		/// Set the amount that the application DPI has been scaled, used for
-		/// scaling device coordinates to pixels and oversampling raster shapes
-		/// (Default = 1.0).
-		///
-		[CLink]
-		public static extern void ulConfigSetDeviceScale(ULConfig config, double value);
 		
 		///
 		/// The winding order for front-facing triangles. @see FaceWinding
@@ -163,18 +107,6 @@ namespace Ultralight.CAPI
 		///
 		[CLink]
 		public static extern void ulConfigSetFaceWinding(ULConfig config, ULFaceWinding winding);
-		
-		///
-		/// Set whether images should be enabled (Default = True).
-		///
-		[CLink]
-		public static extern void ulConfigSetEnableImages(ULConfig config, bool enabled);
-		
-		///
-		/// Set whether JavaScript should be eanbled (Default = True).
-		///
-		[CLink]
-		public static extern void ulConfigSetEnableJavaScript(ULConfig config, bool enabled);
 		
 		///
 		/// The hinting algorithm to use when rendering fonts. (Default = kFontHinting_Normal)
@@ -190,37 +122,6 @@ namespace Ultralight.CAPI
 		///
 		[CLink]
 		public static extern void ulConfigSetFontGamma(ULConfig config, double font_gamma);
-		
-		///
-		/// Set default font-family to use (Default = Times New Roman).
-		///
-		[CLink]
-		public static extern void ulConfigSetFontFamilyStandard(ULConfig config, ULString font_name);
-		
-		///
-		/// Set default font-family to use for fixed fonts, eg <pre> and <code>
-		/// (Default = Courier New).
-		///
-		[CLink]
-		public static extern void ulConfigSetFontFamilyFixed(ULConfig config, ULString font_name);
-		
-		///
-		/// Set default font-family to use for serif fonts (Default = Times New Roman).
-		///
-		[CLink]
-		public static extern void ulConfigSetFontFamilySerif(ULConfig config, ULString font_name);
-		
-		///
-		/// Set default font-family to use for sans-serif fonts (Default = Arial).
-		///
-		[CLink]
-		public static extern void ulConfigSetFontFamilySansSerif(ULConfig config, ULString font_name);
-		
-		///
-		/// Set user agent string (See <Ultralight/platform/Config.h> for the default).
-		///
-		[CLink]
-		public static extern void ulConfigSetUserAgent(ULConfig config, ULString agent_string);
 		
 		///
 		/// Set user stylesheet (CSS) (Default = Empty).
@@ -407,6 +308,94 @@ namespace Ultralight.CAPI
 		public static extern ULString ulSessionGetDiskPath(ULSession session);
 		
 		/******************************************************************************
+		* ViewConfig
+		*****************************************************************************/
+		
+		///
+		/// Create view configuration with default values (see <Ultralight/platform/View.h>).
+		///
+		[CLink]
+		public static extern ULViewConfig ulCreateViewConfig();
+		
+		///
+		/// Destroy view configuration.
+		///
+		[CLink]
+		public static extern void ulDestroyViewConfig(ULViewConfig config);
+		
+		///
+		/// When enabled, the View will be rendered to an offscreen GPU texture
+		/// using the GPU driver set in ulPlatformSetGPUDriver. You can fetch
+		/// details for the texture via ulViewGetRenderTarget.
+		///
+		/// When disabled (the default), the View will be rendered to an offscreen
+		/// pixel buffer surface. This pixel buffer can optionally be provided by the user--
+		/// for more info see ulViewGetSurface.
+		///
+		[CLink]
+		public static extern void ulViewConfigSetIsAccelerated(ULViewConfig config, bool is_accelerated);
+		
+		///
+		/// Set whether images should be enabled (Default = True).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetIsTransparent(ULViewConfig config, bool is_transparent);
+		
+		///
+		/// Set the amount that the application DPI has been scaled, used for
+		/// scaling device coordinates to pixels and oversampling raster shapes
+		/// (Default = 1.0).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetInitialDeviceScale(ULViewConfig config, double initial_device_scale);
+		
+		[CLink]
+		public static extern void ulViewConfigSetInitialFocus(ULViewConfig config, bool is_focused);
+		
+		///
+		/// Set whether images should be enabled (Default = True).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetEnableImages(ULViewConfig config, bool enabled);
+		
+		///
+		/// Set whether JavaScript should be eanbled (Default = True).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetEnableJavaScript(ULViewConfig config, bool enabled);
+		
+		///
+		/// Set default font-family to use (Default = Times New Roman).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetFontFamilyStandard(ULViewConfig config, ULString font_name);
+		
+		///
+		/// Set default font-family to use for fixed fonts, eg <pre> and <code>
+		/// (Default = Courier New).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetFontFamilyFixed(ULViewConfig config, ULString font_name);
+		
+		///
+		/// Set default font-family to use for serif fonts (Default = Times New Roman).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetFontFamilySerif(ULViewConfig config, ULString font_name);
+		
+		///
+		/// Set default font-family to use for sans-serif fonts (Default = Arial).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetFontFamilySansSerif(ULViewConfig config, ULString font_name);
+		
+		///
+		/// Set user agent string (See <Ultralight/platform/Config.h> for the default).
+		///
+		[CLink]
+		public static extern void ulViewConfigSetUserAgent(ULViewConfig config, ULString agent_string);
+		
+		/******************************************************************************
 		* View
 		*****************************************************************************/
 		
@@ -416,7 +405,7 @@ namespace Ultralight.CAPI
 		/// @note  You can pass null to 'session' to use the default session.
 		///
 		[CLink]
-		public static extern ULView ulCreateView(ULRenderer renderer, uint32 width, uint32 height, bool transparent, ULSession session, bool force_cpu_renderer);
+		public static extern ULView ulCreateView(ULRenderer renderer, uint32 width, uint32 height, ULViewConfig view_config, ULSession session);
 		
 		///
 		/// Destroy a View.
@@ -1365,182 +1354,16 @@ namespace Ultralight.CAPI
 		*****************************************************************************/
 		
 		///
-		/// Render buffer description.
-		///
-		[CRepr]
-		public struct ULRenderBuffer
-		{
-			public uint32 texture_id; // The backing texture for this RenderBuffer
-			public uint32 width; // The width of the RenderBuffer texture
-			public uint32 height; // The height of the RenderBuffer texture
-			public bool has_stencil_buffer; // Currently unused, always false.
-			public bool has_depth_buffer; // Currently unsued, always false.
-		};
-		
-		///
 		/// @note  This pragma pack(push, 1) command is important! Vertex layouts
 		///	       should not be padded with any bytes.
 		///
 		///
-		/// Vertex layout for path vertices.
-		///
-		/// (this struct's members aligned on single-byte boundaries)
-		///
-		[CRepr, Packed]
-		public struct ULVertex_2f_4ub_2f
-		{
-			public float[2] pos;
-			public uint8[4] color;
-			public float[2] obj;
-		};
-		
-		///
-		/// Vertex layout for quad vertices.
-		///
-		/// (this struct's members aligned on single-byte boundaries)
-		///
-		[CRepr, Packed]
-		public struct ULVertex_2f_4ub_2f_2f_28f
-		{
-			public float[2] pos;
-			public uint8[4] color;
-			public float[2] tex;
-			public float[2] obj;
-			public float[4] data0;
-			public float[4] data1;
-			public float[4] data2;
-			public float[4] data3;
-			public float[4] data4;
-			public float[4] data5;
-			public float[4] data6;
-		};
-		
-		///
 		/// End single-byte alignment.
 		///
-		///
-		/// Vertex buffer data.
-		///
-		[CRepr]
-		public struct ULVertexBuffer
-		{
-			public ULVertexBufferFormat format;
-			public uint32 size;
-			public uint8* data;
-		};
-		
 		///
 		/// Vertex index type.
 		///
 		public typealias ULIndexType = uint32;
-		///
-		/// Vertex index buffer data.
-		///
-		[CRepr]
-		public struct ULIndexBuffer
-		{
-			public uint32 size;
-			public uint8* data;
-		};
-		
-		///
-		/// Raw 4x4 matrix as an array of floats
-		///
-		[CRepr]
-		public struct ULMatrix4x4
-		{
-			public float[16] data;
-		};
-		
-		///
-		/// 4-component float vector
-		///
-		[CRepr]
-		public struct ULvec4
-		{
-			public float[4] value;
-		};
-		
-		///
-		/// GPU State description.
-		///
-		[CRepr]
-		public struct ULGPUState
-		{
-		
-			/// Viewport width in pixels
-			public uint32 viewport_width;
-		
-			/// Viewport height in pixels
-			public uint32 viewport_height;
-		
-			/// Transform matrix-- you should multiply this with the screen-space
-			/// orthographic projection matrix then pass to the vertex shader.
-			public ULMatrix4x4 transform;
-		
-			/// Whether or not we should enable texturing for the current draw command.
-			public bool enable_texturing;
-		
-			/// Whether or not we should enable blending for the current draw command.
-			/// If blending is disabled, any drawn pixels should overwrite existing.
-			/// Mainly used so we can modify alpha values of the RenderBuffer during
-			/// scissored clears.
-			public bool enable_blend;
-		
-			/// The vertex/pixel shader program pair to use for the current draw command.
-			/// You should cast this to ShaderType to get the corresponding enum.
-			public uint8 shader_type;
-		
-			/// The render buffer to use for the current draw command.
-			public uint32 render_buffer_id;
-		
-			/// The texture id to bind to slot #1. (Will be 0 if none)
-			public uint32 texture_1_id;
-		
-			/// The texture id to bind to slot #2. (Will be 0 if none)
-			public uint32 texture_2_id;
-		
-			/// The texture id to bind to slot #3. (Will be 0 if none)
-			public uint32 texture_3_id;
-		
-			/// The following four members are passed to the pixel shader via uniforms.
-			public float[8] uniform_scalar;
-			public ULvec4[8] uniform_vector;
-			public uint8 clip_size;
-			public ULMatrix4x4[8] clip;
-		
-			/// Whether or not scissor testing should be used for the current draw
-			/// command.
-			public bool enable_scissor;
-		
-			/// The scissor rect to use for scissor testing (units in pixels)
-			public ULIntRect scissor_rect;
-		};
-		
-		///
-		/// Command description.
-		///
-		[CRepr]
-		public struct ULCommand
-		{
-			public uint8 command_type; // The type of command to dispatch.
-			public ULGPUState gpu_state; // GPU state parameters for current command.
-		
-			/// The following members are only used with kCommandType_DrawGeometry
-			public uint32 geometry_id; // The geometry ID to bind
-			public uint32 indices_count; // The number of indices
-			public uint32 indices_offset; // The index to start from
-		};
-		
-		///
-		/// Command list, @see ULGPUDriverUpdateCommandList
-		[CRepr]
-		public struct ULCommandList
-		{
-			public uint32 size;
-			public ULCommand* commands;
-		};
-		
 		///
 		/// The callback invoked when the GPUDriver will begin dispatching commands
 		/// (such as CreateTexture and UpdateCommandList) during the current call to

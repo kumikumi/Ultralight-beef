@@ -110,23 +110,6 @@ namespace Ultralight.CAPI
 		[CLink]
 		public static extern void ulDestroyApp(ULApp app);
 		
-		///
-		/// Set the main window, you must set this before calling ulAppRun.
-		///
-		/// @param  window  The window to use for all rendering.
-		///
-		/// @note  We currently only support one Window per App, this will change
-		///        later once we add support for multiple driver instances.
-		///
-		[CLink]
-		public static extern void ulAppSetWindow(ULApp app, ULWindow window);
-		
-		///
-		/// Get the main window.
-		///
-		[CLink]
-		public static extern ULWindow ulAppGetWindow(ULApp app);
-		
 		public typealias ULUpdateCallback = function void(void* user_data);
 		
 		///
@@ -160,7 +143,7 @@ namespace Ultralight.CAPI
 		public static extern ULRenderer ulAppGetRenderer(ULApp app);
 		
 		///
-		/// Run the main loop, make sure to call ulAppSetWindow before calling this.
+		/// Run the main loop.
 		///
 		[CLink]
 		public static extern void ulAppRun(ULApp app);
@@ -194,9 +177,9 @@ namespace Ultralight.CAPI
 		///
 		/// @param  monitor       The monitor to create the Window on.
 		///
-		/// @param  width         The width (in device coordinates).
+		/// @param  width         The width (in screen coordinates).
 		///
-		/// @param  height        The height (in device coordinates).
+		/// @param  height        The height (in screen coordinates).
 		///
 		/// @param  fullscreen    Whether or not the window is fullscreen.
 		///
@@ -211,7 +194,7 @@ namespace Ultralight.CAPI
 		[CLink]
 		public static extern void ulDestroyWindow(ULWindow window);
 		
-		public typealias ULCloseCallback = function void(void* user_data);
+		public typealias ULCloseCallback = function void(void* user_data, ULWindow window);
 		
 		///
 		/// Set a callback to be notified when a window closes.
@@ -219,7 +202,7 @@ namespace Ultralight.CAPI
 		[CLink]
 		public static extern void ulWindowSetCloseCallback(ULWindow window, ULCloseCallback callback, void* user_data);
 		
-		public typealias ULResizeCallback = function void(void* user_data, uint32 width, uint32 height);
+		public typealias ULResizeCallback = function void(void* user_data, ULWindow window, uint32 width, uint32 height);
 		
 		///
 		/// Set a callback to be notified when a window resizes
@@ -229,16 +212,55 @@ namespace Ultralight.CAPI
 		public static extern void ulWindowSetResizeCallback(ULWindow window, ULResizeCallback callback, void* user_data);
 		
 		///
+		/// Get window width (in screen coordinates).
+		///
+		[CLink]
+		public static extern uint32 ulWindowGetScreenWidth(ULWindow window);
+		
+		///
 		/// Get window width (in pixels).
 		///
 		[CLink]
 		public static extern uint32 ulWindowGetWidth(ULWindow window);
 		
 		///
+		/// Get window height (in screen coordinates).
+		///
+		[CLink]
+		public static extern uint32 ulWindowGetScreenHeight(ULWindow window);
+		
+		///
 		/// Get window height (in pixels).
 		///
 		[CLink]
 		public static extern uint32 ulWindowGetHeight(ULWindow window);
+		
+		///
+		/// Move the window to a new position (in screen coordinates) relative to the top-left of the
+		/// monitor area.
+		///
+		[CLink]
+		public static extern void ulWindowMoveTo(ULWindow window, int32 x, int32 y);
+		
+		///
+		/// Move the window to the center of the monitor.
+		///
+		[CLink]
+		public static extern void ulWindowMoveToCenter(ULWindow param);
+		
+		///
+		/// Get the x-position of the window (in screen coordinates) relative to the top-left of the
+		/// monitor area.
+		///
+		[CLink]
+		public static extern int32 ulWindowGetPositionX(ULWindow window);
+		
+		///
+		/// Get the y-position of the window (in screen coordinates) relative to the top-left of the
+		/// monitor area.
+		///
+		[CLink]
+		public static extern int32 ulWindowGetPositionY(ULWindow window);
 		
 		///
 		/// Get whether or not a window is fullscreen.
@@ -265,22 +287,40 @@ namespace Ultralight.CAPI
 		public static extern void ulWindowSetCursor(ULWindow window, ULCursor cursor);
 		
 		///
+		/// Show the window (if it was previously hidden).
+		///
+		[CLink]
+		public static extern void ulWindowShow(ULWindow window);
+		
+		///
+		/// Hide the window.
+		///
+		[CLink]
+		public static extern void ulWindowHide(ULWindow window);
+		
+		///
+		/// Whether or not the window is currently visible (not hidden).
+		///
+		[CLink]
+		public static extern bool ulWindowIsVisible(ULWindow window);
+		
+		///
 		/// Close a window.
 		///
 		[CLink]
 		public static extern void ulWindowClose(ULWindow window);
 		
 		///
-		/// Convert device coordinates to pixels using the current DPI scale.
+		/// Convert screen coordinates to pixels using the current DPI scale.
 		///
 		[CLink]
-		public static extern int32 ulWindowDeviceToPixel(ULWindow window, int32 val);
+		public static extern int32 ulWindowScreenToPixels(ULWindow window, int32 val);
 		
 		///
-		/// Convert pixels to device coordinates using the current DPI scale.
+		/// Convert pixels to screen coordinates using the current DPI scale.
 		///
 		[CLink]
-		public static extern int32 ulWindowPixelsToDevice(ULWindow window, int32 val);
+		public static extern int32 ulWindowPixelsToScreen(ULWindow window, int32 val);
 		
 		///
 		/// Get the underlying native window handle.
@@ -295,12 +335,11 @@ namespace Ultralight.CAPI
 		///
 		/// Create a new Overlay.
 		///
-		/// @param  window  The window to create the Overlay in. (we currently only
-		///                 support one window per application)
+		/// @param  window  The window to create the Overlay in.
 		///
-		/// @param  width   The width in device coordinates.
+		/// @param  width   The width in pixels.
 		///
-		/// @param  height  The height in device coordinates.
+		/// @param  height  The height in pixels.
 		///
 		/// @param  x       The x-position (offset from the left of the Window), in
 		///                 pixels.
